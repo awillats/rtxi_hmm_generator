@@ -21,7 +21,7 @@
  * DefaultGUIModel with a custom GUI.
  */
 //#include "Time.h"
-#include "BabyClass.h"
+#include "include/BabyClass.h"
 #include <default_gui_model.h>
 
 

@@ -1,13 +1,13 @@
 PLUGIN_NAME = hmm_generator
 
 HEADERS = hmm_generator.h\
-          BabyClass.h\
+          include/BabyClass.h\
 #          Time.h\
 
 
 SOURCES = hmm_generator.cpp\
           moc_hmm_generator.cpp\
-          BabyClass.cpp\
+          include/BabyClass.cpp\
  #         Time.cpp\
 
 
