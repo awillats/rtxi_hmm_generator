@@ -21,9 +21,15 @@
  * DefaultGUIModel with a custom GUI.
  */
 
+//#include <string.h>
+
+
 #include "hmm_generator.h"
 #include <iostream>
 #include <main_window.h>
+
+
+
 
 extern "C" Plugin::Object*
 createRTXIPlugin(void)
@@ -39,6 +45,7 @@ static DefaultGUIModel::variable_t vars[] = {
   {
     "A State", "Tooltip description", DefaultGUIModel::STATE,
   },
+
 };
 
 static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
@@ -73,6 +80,12 @@ HmmGenerator::initParameters(void)
 {
   some_parameter = 0;
   some_state = 0;
+
+  BabyClass foobar(10,1);
+  some_state = foobar.getFoo();
+  //BabyClass foobar;
+//  foobar.getFoo();
+  //time_var.setTime(0,10,10);
 }
 
 void
@@ -83,10 +96,14 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       setParameter("GUI label", some_parameter);
       setState("A State", some_state);
+
       break;
 
     case MODIFY:
       some_parameter = getParameter("GUI label").toDouble();
+//      some_state = time_var.getHour();
+//      setState("A State", some_state);
+      //time_var.incrTime(0,1,0);
       break;
 
     case UNPAUSE:

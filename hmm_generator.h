@@ -20,8 +20,10 @@
  * This is a template header file for a user modules derived from
  * DefaultGUIModel with a custom GUI.
  */
-
+//#include "Time.h"
+#include "BabyClass.h"
 #include <default_gui_model.h>
+
 
 class HmmGenerator : public DefaultGUIModel
 {
@@ -42,7 +44,10 @@ protected:
 private:
   double some_parameter;
   double some_state;
+//  std::string some_string;
+  //Time time_var;
   double period;
+  BabyClass foobar;
 
   void initParameters();
 
