@@ -24,8 +24,8 @@
 #include "include/BabyClass.h"
 #include <default_gui_model.h>
 #include <vector>
-#include "include/hmmFuns.hpp"
-//#include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
+//#include "include/hmmFuns.hpp"
+#include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
 
 
 class HmmGenerator : public DefaultGUIModel
