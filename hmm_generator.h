@@ -23,6 +23,9 @@
 //#include "Time.h"
 #include "include/BabyClass.h"
 #include <default_gui_model.h>
+#include <vector>
+#include "include/hmmFuns.hpp"
+//#include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
 
 
 class HmmGenerator : public DefaultGUIModel
@@ -48,6 +51,7 @@ private:
   //Time time_var;
   double period;
   BabyClass foobar;
+  std::vector<int> V;
 
   void initParameters();
 

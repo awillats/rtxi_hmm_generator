@@ -83,9 +83,13 @@ HmmGenerator::initParameters(void)
 
   BabyClass foobar(10,1);
   some_state = foobar.getFoo();
-  //BabyClass foobar;
-//  foobar.getFoo();
-  //time_var.setTime(0,10,10);
+
+  V={10,5};
+    std::vector<double> vFr = {0.1, 0.6};
+    std::vector<double> vTr = {0.1, 0.1};
+    
+    int numElements = 350;
+    std::vector<int> q = genHMM(vFr,vTr,numElements);
 }
 
 void
