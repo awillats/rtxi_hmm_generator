@@ -1,9 +1,9 @@
-PLUGIN_NAME = plugin_template
+PLUGIN_NAME = hmm_generator
 
-HEADERS = plugin-template.h
+HEADERS = hmm_generator.h
 
-SOURCES = plugin-template.cpp\
-          moc_plugin-template.cpp\
+SOURCES = hmm_generator.cpp\
+          moc_hmm_generator.cpp\
 
 LIBS = 
 
