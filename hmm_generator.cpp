@@ -27,9 +27,7 @@
 #include "hmm_generator.h"
 #include <iostream>
 #include <main_window.h>
-#include <math.h> 
-#include <exception>
-
+//#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.hpp"
 
 extern "C" Plugin::Object*
 createRTXIPlugin(void)
@@ -81,12 +79,10 @@ HmmGenerator::stepHMM(void)
   if (buffi>=bufflen)
   {
      buffi=0;
-     //rep_count++;
   }
-
    spike= spike_buff[buffi];
+   //spike=guess_buff[buffi];
    output(0)= spike;
-
 }
 
 void
@@ -96,6 +92,15 @@ HmmGenerator::execute(void)
 
   return;
 }
+
+
+int* HmmGenerator::decodeHMM(int obs[], HMM guess_hmm)
+{
+  int* guessed = viterbi(guess_hmm, obs, bufflen);
+  return guessed;
+  
+}
+
 
 void
 HmmGenerator::initParameters(void)
@@ -117,6 +122,31 @@ HmmGenerator::initParameters(void)
   spike_buff = genHMM(vFr,vTr,bufflen);
   stepHMM();
 
+
+
+      double A0[2] = {1-vTr[0], vTr[0]};
+    double A1[2] = {vTr[1], 1-vTr[1]};
+    double *A[2] = {A0, A1};
+    
+    double B0[2] = {1-vFr[0], vFr[0]};
+    double B1[2] = {1-vFr[1], vFr[1]};
+    double *B[2] = {B0, B1};
+
+    //ideally this would be the transition probabilities...?
+    double PI[2] = {.5,.5};
+    HMM guess_hmm(2,2, A,B,PI);
+  
+    int* obs = spike_buff.data();
+    int* guessed = decodeHMM(obs,guess_hmm);
+    std::vector<int> guess_buff(guessed,guessed+bufflen);
+
+   std::for_each(guess_buff.begin(), guess_buff.end(), [&] (int n) {
+        some_state += n;
+   });
+
+
+    setState("A State", some_state);
+
 }
 
 void
@@ -126,14 +156,20 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
     case INIT:
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       setParameter("GUI label", some_parameter);
-      setState("A State", some_state);
-      setState("Spike", spike);
+      //setState("A State", some_state);
+
 
       break;
 
     case MODIFY:
       some_parameter = getParameter("GUI label").toDouble();
       buffi=0;
+
+      std::for_each(guess_buff.begin(), guess_buff.end(), [&] (int n) {
+        some_state += 2*n;
+      });
+
+      setState("A State", some_state);
       break;
 
     case UNPAUSE:

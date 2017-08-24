@@ -24,8 +24,11 @@
 #include "include/BabyClass.h"
 #include <default_gui_model.h>
 #include <vector>
-//#include "include/hmmFuns.hpp"
+#include <iterator>
+
+
 #include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
+#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.hpp"
 
 
 class HmmGenerator : public DefaultGUIModel
@@ -59,8 +62,13 @@ private:
   std::vector<int> spike_buff;
   std::vector<int> state_buff;
 
+  std::vector<int> guess_buff;
+
+  //HMM guess_hmm;
+
   void initParameters();
   void stepHMM();
+  int* decodeHMM(int[], HMM);
 
 private slots:
   // these are custom functions that can also be connected to events
