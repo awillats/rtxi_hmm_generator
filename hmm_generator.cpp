@@ -27,8 +27,8 @@
 #include "hmm_generator.h"
 #include <iostream>
 #include <main_window.h>
-
-
+#include <math.h> 
+#include <exception>
 
 
 extern "C" Plugin::Object*
@@ -45,6 +45,10 @@ static DefaultGUIModel::variable_t vars[] = {
   {
     "A State", "Tooltip description", DefaultGUIModel::STATE,
   },
+  {
+    "Spike", "ooze", DefaultGUIModel::OUTPUT,
+  },
+
 
 };
 
@@ -69,9 +73,27 @@ HmmGenerator::~HmmGenerator(void)
 {
 }
 
+
+void
+HmmGenerator::stepHMM(void)
+{
+  buffi++;
+  if (buffi>=bufflen)
+  {
+     buffi=0;
+     //rep_count++;
+  }
+
+   spike= spike_buff[buffi];
+   output(0)= spike;
+
+}
+
 void
 HmmGenerator::execute(void)
 {
+   stepHMM();
+
   return;
 }
 
@@ -80,16 +102,21 @@ HmmGenerator::initParameters(void)
 {
   some_parameter = 0;
   some_state = 0;
+  spike=0;
+  rep_count=0;
 
   BabyClass foobar(10,1);
   some_state = foobar.getFoo();
 
-  V={10,5};
-    std::vector<double> vFr = {0.1, 0.6};
-    std::vector<double> vTr = {0.1, 0.1};
-    
-    int numElements = 350;
-    std::vector<int> q = genHMM(vFr,vTr,numElements);
+
+  std::vector<double> vFr = {0.1, 0.6};
+  std::vector<double> vTr = {0.1, 0.1};
+
+  buffi = 0;
+  bufflen = 350;
+  spike_buff = genHMM(vFr,vTr,bufflen);
+  stepHMM();
+
 }
 
 void
@@ -100,14 +127,13 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       setParameter("GUI label", some_parameter);
       setState("A State", some_state);
+      setState("Spike", spike);
 
       break;
 
     case MODIFY:
       some_parameter = getParameter("GUI label").toDouble();
-//      some_state = time_var.getHour();
-//      setState("A State", some_state);
-      //time_var.incrTime(0,1,0);
+      buffi=0;
       break;
 
     case UNPAUSE:

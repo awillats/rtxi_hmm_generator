@@ -4,7 +4,7 @@ HEADERS = hmm_generator.h\
           include/BabyClass.h\
           include/hmmFuns.hpp\
           ../../../module_help/StAC_rtxi/hmmFuns.hpp\
-#          Time.h\
+
 
 
 SOURCES = hmm_generator.cpp\
@@ -12,7 +12,7 @@ SOURCES = hmm_generator.cpp\
           include/BabyClass.cpp\
           ../../../module_help/StAC_rtxi/hmmFuns.cpp\
 #          include/hmmFuns.cpp\
- #         Time.cpp\
+
 
 
 LIBS = 

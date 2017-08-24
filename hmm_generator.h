@@ -41,6 +41,7 @@ public:
   void createGUI(DefaultGUIModel::variable_t*, int);
   void customizeGUI(void);
 
+
 protected:
   virtual void update(DefaultGUIModel::update_flags_t);
 
@@ -50,10 +51,16 @@ private:
 //  std::string some_string;
   //Time time_var;
   double period;
-  BabyClass foobar;
-  std::vector<int> V;
+  double spike;
+
+  int bufflen;
+  int buffi;
+  double rep_count;
+  std::vector<int> spike_buff;
+  std::vector<int> state_buff;
 
   void initParameters();
+  void stepHMM();
 
 private slots:
   // these are custom functions that can also be connected to events
