@@ -46,6 +46,9 @@ static DefaultGUIModel::variable_t vars[] = {
   {
     "Spike", "ooze", DefaultGUIModel::OUTPUT,
   },
+  {
+    "GuessState", "return of the ooze", DefaultGUIModel::OUTPUT,
+  },
 
 
 };
@@ -80,9 +83,12 @@ HmmGenerator::stepHMM(void)
   {
      buffi=0;
   }
-   spike= spike_buff[buffi];
-   //spike=guess_buff[buffi];
+
+   spike = spike_buff[buffi];
+   gstate= guess_buff[buffi];
+
    output(0)= spike;
+   output(1)=gstate;
 }
 
 void
@@ -108,7 +114,7 @@ HmmGenerator::initParameters(void)
   some_parameter = 0;
   some_state = 0;
   spike=0;
-  rep_count=0;
+  gstate=0;
 
   BabyClass foobar(10,1);
   some_state = foobar.getFoo();
@@ -118,13 +124,19 @@ HmmGenerator::initParameters(void)
   std::vector<double> vTr = {0.1, 0.1};
 
   buffi = 0;
-  bufflen = 350;
+  bufflen = 1000;
+
+
   spike_buff = genHMM(vFr,vTr,bufflen);
-  stepHMM();
 
 
 
-      double A0[2] = {1-vTr[0], vTr[0]};
+
+
+
+  
+
+    double A0[2] = {1-vTr[0], vTr[0]};
     double A1[2] = {vTr[1], 1-vTr[1]};
     double *A[2] = {A0, A1};
     
@@ -138,12 +150,21 @@ HmmGenerator::initParameters(void)
   
     int* obs = spike_buff.data();
     int* guessed = decodeHMM(obs,guess_hmm);
-    std::vector<int> guess_buff(guessed,guessed+bufflen);
 
+    //NB: no idea why this temporary vector is necessary. should be able to replace this with one line...
+    std::vector<int> temp_vec(guessed,guessed+bufflen);
+    guess_buff = temp_vec;
+    //std::vector<int> guess_buff(guessed,guessed+bufflen);
+
+   //sum the guessed states to verify something interesting happened
+/*
    std::for_each(guess_buff.begin(), guess_buff.end(), [&] (int n) {
         some_state += n;
    });
+*/
 
+
+      stepHMM();
 
     setState("A State", some_state);
 
@@ -164,12 +185,6 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
     case MODIFY:
       some_parameter = getParameter("GUI label").toDouble();
       buffi=0;
-
-      std::for_each(guess_buff.begin(), guess_buff.end(), [&] (int n) {
-        some_state += 2*n;
-      });
-
-      setState("A State", some_state);
       break;
 
     case UNPAUSE:

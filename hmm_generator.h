@@ -55,13 +55,13 @@ private:
   //Time time_var;
   double period;
   double spike;
+  int gstate;
 
   int bufflen;
   int buffi;
-  double rep_count;
+//s  double rep_count;
   std::vector<int> spike_buff;
   std::vector<int> state_buff;
-
   std::vector<int> guess_buff;
 
   //HMM guess_hmm;
