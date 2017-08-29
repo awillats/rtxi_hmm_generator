@@ -49,6 +49,9 @@ protected:
   virtual void update(DefaultGUIModel::update_flags_t);
 
 private:
+
+  //should these be extern statements?
+
   double some_parameter;
   double some_state;
 //  std::string some_string;
@@ -65,7 +68,11 @@ private:
   std::vector<int> guess_buff;
 
   //HMM guess_hmm;
+  //NB: this method declaration needs to go somewhere else!!
 
+
+
+  HMM easyBuild(std::vector<double>, std::vector<double>, int, int);
   void initParameters();
   void stepHMM();
   int* decodeHMM(int[], HMM);

@@ -100,13 +100,32 @@ HmmGenerator::execute(void)
 }
 
 
+
+
 int* HmmGenerator::decodeHMM(int obs[], HMM guess_hmm)
 {
   int* guessed = viterbi(guess_hmm, obs, bufflen);
-  return guessed;
-  
+  return guessed;  
 }
 
+
+HMM HmmGenerator::easyBuild(std::vector<double> vFr, std::vector<double> vTr, int nstates, int nemits)
+{
+    double A0[2] = {1-vTr[0], vTr[0]};
+    double A1[2] = {vTr[1], 1-vTr[1]};
+    double *A[2] = {A0, A1};
+    
+    double B0[2] = {1-vFr[0], vFr[0]};
+    double B1[2] = {1-vFr[1], vFr[1]};
+    double *B[2] = {B0, B1};
+
+    //ideally this would be the transition probabilities...?
+    double PI[2] = {.5,.5};
+
+    HMM easy_hmm(2,2, A,B,PI);
+    //HMM easy_hmm(10);
+    return easy_hmm;
+}
 
 void
 HmmGenerator::initParameters(void)
@@ -120,21 +139,19 @@ HmmGenerator::initParameters(void)
   some_state = foobar.getFoo();
 
 
-  std::vector<double> vFr = {0.1, 0.6};
-  std::vector<double> vTr = {0.1, 0.1};
+  //std::vector<double> vFr = {0.5, 0.9};
+  std::vector<double> vFr = {0.003, 0.02};
+  //std::vector<double> vFr = {0.03, 0.2};
+  //std::vector<double> vFr = {0.2, 0.6};
+  std::vector<double> vTr = {0.03, 0.03};
+  //std::vector<double> vTr = {0.3, 0.3};
 
   buffi = 0;
-  bufflen = 1000;
+  bufflen = 5500;
 
 
   spike_buff = genHMM(vFr,vTr,bufflen);
 
-
-
-
-
-
-  
 
     double A0[2] = {1-vTr[0], vTr[0]};
     double A1[2] = {vTr[1], 1-vTr[1]};
@@ -147,6 +164,10 @@ HmmGenerator::initParameters(void)
     //ideally this would be the transition probabilities...?
     double PI[2] = {.5,.5};
     HMM guess_hmm(2,2, A,B,PI);
+
+    //easyBuild();
+    HMM gus_hmm = easyBuild(vFr,vTr,2,2); /////////////////////////////////////////////////////////////////DEBUG HERE
+//HMM other_hmm = 
   
     int* obs = spike_buff.data();
     int* guessed = decodeHMM(obs,guess_hmm);
