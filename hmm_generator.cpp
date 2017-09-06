@@ -87,7 +87,7 @@ HmmGenerator::stepHMM(void)
    spike = spike_buff[buffi];
    gstate= guess_buff[buffi];
 
-   output(0)= spike;
+   output(0)=spike;
    output(1)=gstate;
 }
 
@@ -95,7 +95,7 @@ void
 HmmGenerator::execute(void)
 {
    stepHMM();
-
+	//    int* guessed = decodeHMM(obs,guess_hmm);
   return;
 }
 
@@ -166,7 +166,7 @@ HmmGenerator::initParameters(void)
     HMM guess_hmm(2,2, A,B,PI);
 
     //easyBuild();
-    HMM gus_hmm = easyBuild(vFr,vTr,2,2); /////////////////////////////////////////////////////////////////DEBUG HERE
+    HMM bad_hmm = easyBuild(vFr,vTr,2,2); /////////////////////////////////////////////////////////////////DEBUG HERE
 //HMM other_hmm = 
   
     int* obs = spike_buff.data();
