@@ -41,6 +41,22 @@ static DefaultGUIModel::variable_t vars[] = {
     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
   },
   {
+    "FR 1", "Firing rate",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
+    "FR 2", "Firing rate",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
+    "TR 1", "Transition rate",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
+    "TR 2", "Transition rate",
+    DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
+  },
+  {
     "A State", "Tooltip description", DefaultGUIModel::STATE,
   },
   {
@@ -58,16 +74,22 @@ static size_t num_vars = sizeof(vars) / sizeof(DefaultGUIModel::variable_t);
 HmmGenerator::HmmGenerator(void)
   : DefaultGUIModel("HmmGenerator with Custom GUI", ::vars, ::num_vars)
 {
-  setWhatsThis("<p><b>HmmGenerator:</b><br>QWhatsThis description.</p>");
-  DefaultGUIModel::createGUI(vars,
+    setWhatsThis("<p><b>HmmGenerator:</b><br>QWhatsThis description.</p>");
+    DefaultGUIModel::createGUI(vars,
                              num_vars); // this is required to create the GUI
-  customizeGUI();
-  initParameters();
-  update(INIT); // this is optional, you may place initialization code directly
+    customizeGUI();
+    initParameters();
+    update(INIT); // this is optional, you may place initialization code directly
                 // into the constructor
-  refresh();    // this is required to update the GUI with parameter and state
+    refresh();    // this is required to update the GUI with parameter and state
                 // values
-  QTimer::singleShot(0, this, SLOT(resizeMe()));
+    
+    //update(MODIFY);
+    //update(MODIFY);
+    printf("\n");
+    //update(INIT);
+    //refresh();
+    QTimer::singleShot(0, this, SLOT(resizeMe()));
 }
 
 HmmGenerator::~HmmGenerator(void)
@@ -84,10 +106,7 @@ HmmGenerator::stepHMM(void)
     //reset the index
     buffi=0;
     //generate a new chunk of observations!
-    spike_buff = genHMM(vFr,vTr,bufflen);
-    std::vector<double>PI(2,.5);
-    guess_hmm = HMMv(2,2,vFr,vTr,PI);
-    decodeSpkBuffer();
+    restartHMM();
   }
 
    spike = spike_buff[buffi];
@@ -100,7 +119,7 @@ HmmGenerator::stepHMM(void)
 void
 HmmGenerator::execute(void)
 {
-   stepHMM();
+  stepHMM();
   return;
 }
 
@@ -119,6 +138,14 @@ void HmmGenerator::decodeSpkBuffer()
     std::vector<int> temp_vec(guessed,guessed+bufflen);
     state_guess_buff = temp_vec;
 }
+void HmmGenerator::restartHMM()
+{
+    spike_buff = genHMM(vFr,vTr,bufflen);
+    std::vector<double>PI(2,.5);
+    guess_hmm = HMMv(2,2,vFr,vTr,PI);
+    decodeSpkBuffer();
+    //printf("HMM restarted\n");
+}
 
 
 void
@@ -127,34 +154,69 @@ HmmGenerator::initParameters(void)
     spike=0;
     gstate=0;
 
-    vFr = {0.003, 0.02};
-    vTr = {0.03, 0.03};
-    std::vector<double>PI(2,.5);
+    pfr1=1e-3;//0.003;//30;
+    pfr2=20e-3;//0.02;//10;
+    ptr1=4e-4;//0.03;//0.1;
+    ptr2=4e-4;//0.03;//0.1;
+
+    vFr = {pfr1, pfr2};
+    vTr = {ptr1, ptr2};
 
     buffi = 0;
     bufflen = 5500;
-
-    spike_buff = genHMM(vFr,vTr,bufflen);
-    guess_hmm = HMMv(2,2,vFr,vTr,PI);
-    decodeSpkBuffer();
+    
+    getSkip=1;
+    
+    restartHMM();
     stepHMM();
 }
+
 
 void
 HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
 {
+  double foo;
+  
   switch (flag) {
     case INIT:
+      printf("Init called\n");
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
-      //setParameter("GUI label", some_parameter);
+      period_ms = period*1e-3;
+      setParameter("GUI label", 10.1);
       //setState("A State", some_state);
-
-
+      setParameter("FR 1", pfr1/period_ms);
+      setParameter("FR 2", pfr2/period_ms);
+      setParameter("TR 1", ptr1/period_ms);
+      setParameter("TR 2", ptr2/period_ms);
       break;
 
     case MODIFY:
-      //some_parameter = getParameter("GUI label").toDouble();
+      printf("Modify called\n");
+      
       buffi=0;
+        //period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
+        //period_ms = period*1e-3;
+
+        //this skip business is probably unnecessary, but for some reason this seems to reset values to zero and prevent the INIT clause from taking effect
+      if (getSkip==0)
+      {
+        printf("\n**ModMod\n");
+        pfr1 = getParameter("FR 1").toDouble()*period_ms;
+        pfr2 = getParameter("FR 2").toDouble()*period_ms;
+        ptr1 = getParameter("TR 1").toDouble()*period_ms;
+        ptr2 = getParameter("TR 2").toDouble()*period_ms;
+      }
+      else
+      {
+        getSkip=0;
+        printf("\n**Mod skip\n");
+      } 
+      printf("F:%.3f, %.3f, T:%.3f, %.3f\n",pfr1,pfr2,ptr1,ptr2);
+        //Set up the params for the new HMM
+      vFr = {pfr1, pfr2};  
+      vTr = {ptr1, ptr2};
+      restartHMM();
+      
       break;
 
     case UNPAUSE:
@@ -165,6 +227,7 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
 
     case PERIOD:
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
+     period_ms = period*1e-3;
       break;
 
     default:

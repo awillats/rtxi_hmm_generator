@@ -53,8 +53,9 @@ private:
 
   //should these be extern statements?
 
-
+  int getSkip;
   double period;
+  double period_ms;
   double spike;
   int gstate;
 
@@ -65,7 +66,12 @@ private:
   std::vector<int> state_buff;
   std::vector<int> state_guess_buff;
 
-
+//--- HMM guess params
+  double pfr1;
+  double pfr2;
+  double ptr1;
+  double ptr2;
+  
   std::vector<double> vFr;
   std::vector<double> vTr;
 
@@ -77,6 +83,7 @@ private:
   void stepHMM();
   void decodeSpkBuffer();
   int* decodeHMM(HMMv);
+  void restartHMM();
 
 private slots:
   // these are custom functions that can also be connected to events
