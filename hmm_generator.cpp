@@ -81,11 +81,17 @@ HmmGenerator::stepHMM(void)
   buffi++;
   if (buffi>=bufflen)
   {
-     buffi=0;
+    //reset the index
+    buffi=0;
+    //generate a new chunk of observations!
+    spike_buff = genHMM(vFr,vTr,bufflen);
+    std::vector<double>PI(2,.5);
+    guess_hmm = HMMv(2,2,vFr,vTr,PI);
+    decodeSpkBuffer();
   }
 
    spike = spike_buff[buffi];
-   gstate= guess_buff[buffi];
+   gstate= state_guess_buff[buffi];
 
    output(0)=spike;
    output(1)=gstate;
@@ -95,100 +101,43 @@ void
 HmmGenerator::execute(void)
 {
    stepHMM();
-	//    int* guessed = decodeHMM(obs,guess_hmm);
   return;
 }
 
 
 
 
-int* HmmGenerator::decodeHMM(int obs[], HMM guess_hmm)
+int* HmmGenerator::decodeHMM(HMMv guess_hmm_)
 {
-  int* guessed = viterbi(guess_hmm, obs, bufflen);
+  int* guessed = viterbi(guess_hmm_, spike_buff, bufflen);
   return guessed;  
 }
-
-
-HMM HmmGenerator::easyBuild(std::vector<double> vFr, std::vector<double> vTr, int nstates, int nemits)
+void HmmGenerator::decodeSpkBuffer()
 {
-    double A0[2] = {1-vTr[0], vTr[0]};
-    double A1[2] = {vTr[1], 1-vTr[1]};
-    double *A[2] = {A0, A1};
-    
-    double B0[2] = {1-vFr[0], vFr[0]};
-    double B1[2] = {1-vFr[1], vFr[1]};
-    double *B[2] = {B0, B1};
-
-    //ideally this would be the transition probabilities...?
-    double PI[2] = {.5,.5};
-
-    HMM easy_hmm(2,2, A,B,PI);
-    //HMM easy_hmm(10);
-    return easy_hmm;
+    int* guessed = decodeHMM(guess_hmm);
+    //NB: no idea why this temporary vector is necessary. should be able to replace this with one line...
+    std::vector<int> temp_vec(guessed,guessed+bufflen);
+    state_guess_buff = temp_vec;
 }
+
 
 void
 HmmGenerator::initParameters(void)
 {
-  some_parameter = 0;
-  some_state = 0;
-  spike=0;
-  gstate=0;
+    spike=0;
+    gstate=0;
 
-  BabyClass foobar(10,1);
-  some_state = foobar.getFoo();
+    vFr = {0.003, 0.02};
+    vTr = {0.03, 0.03};
+    std::vector<double>PI(2,.5);
 
+    buffi = 0;
+    bufflen = 5500;
 
-  //std::vector<double> vFr = {0.5, 0.9};
-  std::vector<double> vFr = {0.003, 0.02};
-  //std::vector<double> vFr = {0.03, 0.2};
-  //std::vector<double> vFr = {0.2, 0.6};
-  std::vector<double> vTr = {0.03, 0.03};
-  //std::vector<double> vTr = {0.3, 0.3};
-
-  buffi = 0;
-  bufflen = 5500;
-
-
-  spike_buff = genHMM(vFr,vTr,bufflen);
-
-
-    double A0[2] = {1-vTr[0], vTr[0]};
-    double A1[2] = {vTr[1], 1-vTr[1]};
-    double *A[2] = {A0, A1};
-    
-    double B0[2] = {1-vFr[0], vFr[0]};
-    double B1[2] = {1-vFr[1], vFr[1]};
-    double *B[2] = {B0, B1};
-
-    //ideally this would be the transition probabilities...?
-    double PI[2] = {.5,.5};
-    HMM guess_hmm(2,2, A,B,PI);
-
-    //easyBuild();
-    HMM bad_hmm = easyBuild(vFr,vTr,2,2); /////////////////////////////////////////////////////////////////DEBUG HERE
-//HMM other_hmm = 
-  
-    int* obs = spike_buff.data();
-    int* guessed = decodeHMM(obs,guess_hmm);
-
-    //NB: no idea why this temporary vector is necessary. should be able to replace this with one line...
-    std::vector<int> temp_vec(guessed,guessed+bufflen);
-    guess_buff = temp_vec;
-    //std::vector<int> guess_buff(guessed,guessed+bufflen);
-
-   //sum the guessed states to verify something interesting happened
-/*
-   std::for_each(guess_buff.begin(), guess_buff.end(), [&] (int n) {
-        some_state += n;
-   });
-*/
-
-
-      stepHMM();
-
-    setState("A State", some_state);
-
+    spike_buff = genHMM(vFr,vTr,bufflen);
+    guess_hmm = HMMv(2,2,vFr,vTr,PI);
+    decodeSpkBuffer();
+    stepHMM();
 }
 
 void
@@ -197,14 +146,14 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
   switch (flag) {
     case INIT:
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
-      setParameter("GUI label", some_parameter);
+      //setParameter("GUI label", some_parameter);
       //setState("A State", some_state);
 
 
       break;
 
     case MODIFY:
-      some_parameter = getParameter("GUI label").toDouble();
+      //some_parameter = getParameter("GUI label").toDouble();
       buffi=0;
       break;
 

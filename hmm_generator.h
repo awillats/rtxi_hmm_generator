@@ -28,7 +28,8 @@
 
 
 #include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
-#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.hpp"
+
+#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp"
 
 
 class HmmGenerator : public DefaultGUIModel
@@ -52,10 +53,7 @@ private:
 
   //should these be extern statements?
 
-  double some_parameter;
-  double some_state;
-//  std::string some_string;
-  //Time time_var;
+
   double period;
   double spike;
   int gstate;
@@ -65,17 +63,20 @@ private:
 //s  double rep_count;
   std::vector<int> spike_buff;
   std::vector<int> state_buff;
-  std::vector<int> guess_buff;
+  std::vector<int> state_guess_buff;
+
+
+  std::vector<double> vFr;
+  std::vector<double> vTr;
 
   //HMM guess_hmm;
+  HMMv guess_hmm = HMMv();
   //NB: this method declaration needs to go somewhere else!!
 
-
-
-  HMM easyBuild(std::vector<double>, std::vector<double>, int, int);
   void initParameters();
   void stepHMM();
-  int* decodeHMM(int[], HMM);
+  void decodeSpkBuffer();
+  int* decodeHMM(HMMv);
 
 private slots:
   // these are custom functions that can also be connected to events
