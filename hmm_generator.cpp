@@ -84,8 +84,6 @@ HmmGenerator::HmmGenerator(void)
     refresh();    // this is required to update the GUI with parameter and state
                 // values
     
-    //update(MODIFY);
-    //update(MODIFY);
     printf("\n");
     //update(INIT);
     //refresh();
@@ -110,10 +108,11 @@ HmmGenerator::stepHMM(void)
   }
 
    spike = spike_buff[buffi];
+   int tstate= state_buff[buffi];
    gstate= state_guess_buff[buffi];
 
    output(0)=spike;
-   output(1)=gstate;
+   output(1)=tstate;
 }
 
 void
@@ -122,8 +121,6 @@ HmmGenerator::execute(void)
   stepHMM();
   return;
 }
-
-
 
 
 int* HmmGenerator::decodeHMM(HMMv guess_hmm_)
@@ -138,9 +135,15 @@ void HmmGenerator::decodeSpkBuffer()
     std::vector<int> temp_vec(guessed,guessed+bufflen);
     state_guess_buff = temp_vec;
 }
+
 void HmmGenerator::restartHMM()
 {
-    spike_buff = genHMM(vFr,vTr,bufflen);
+    //spike_buff = genHMM(vFr,vTr,bufflen);
+    HMM_Data HD = genHMM_Data(vFr,vTr,bufflen);
+    spike_buff = HD.spikes;
+    state_buff = HD.states;
+    
+    
     std::vector<double>PI(2,.5);
     guess_hmm = HMMv(2,2,vFr,vTr,PI);
     decodeSpkBuffer();
@@ -154,10 +157,10 @@ HmmGenerator::initParameters(void)
     spike=0;
     gstate=0;
 
-    pfr1=1e-3;//0.003;//30;
-    pfr2=20e-3;//0.02;//10;
-    ptr1=4e-4;//0.03;//0.1;
-    ptr2=4e-4;//0.03;//0.1;
+    pfr1=1e-3;
+    pfr2=20e-3;
+    ptr1=4e-4;
+    ptr2=4e-4;
 
     vFr = {pfr1, pfr2};
     vTr = {ptr1, ptr2};
@@ -198,6 +201,7 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
         //period_ms = period*1e-3;
 
         //this skip business is probably unnecessary, but for some reason this seems to reset values to zero and prevent the INIT clause from taking effect
+        //look at hmm_decoder for an example which doesn't require this...
       if (getSkip==0)
       {
         printf("\n**ModMod\n");

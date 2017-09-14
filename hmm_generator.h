@@ -25,6 +25,7 @@
 #include <default_gui_model.h>
 #include <vector>
 #include <iterator>
+#include <tuple>
 
 
 #include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
