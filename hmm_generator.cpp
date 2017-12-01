@@ -24,6 +24,18 @@
 //#include <string.h>
 
 
+
+/*
+to do list: 
+* remove excess states/params
+* 
+* 
+
+
+*/
+
+
+
 #include "hmm_generator.h"
 #include <iostream>
 #include <main_window.h>
@@ -57,13 +69,16 @@ static DefaultGUIModel::variable_t vars[] = {
     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
   },
   {
-    "A State", "Tooltip description", DefaultGUIModel::STATE,
+    "A State", "delete me", DefaultGUIModel::STATE,
   },
   {
     "Spike", "ooze", DefaultGUIModel::OUTPUT,
   },
   {
-    "GuessState", "return of the ooze", DefaultGUIModel::OUTPUT,
+    "TrueState", "return of the ooze", DefaultGUIModel::OUTPUT,
+  },
+  {
+    "GuessState", "snooze", DefaultGUIModel::OUTPUT,
   },
 
 
@@ -113,6 +128,7 @@ HmmGenerator::stepHMM(void)
 
    output(0)=spike;
    output(1)=tstate;
+   output(2)=gstate;
 }
 
 void
@@ -197,8 +213,6 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
       printf("Modify called\n");
       
       buffi=0;
-        //period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
-        //period_ms = period*1e-3;
 
         //this skip business is probably unnecessary, but for some reason this seems to reset values to zero and prevent the INIT clause from taking effect
         //look at hmm_decoder for an example which doesn't require this...
@@ -216,6 +230,8 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
         printf("\n**Mod skip\n");
       } 
       printf("F:%.3f, %.3f, T:%.3f, %.3f\n",pfr1,pfr2,ptr1,ptr2);
+      
+      
         //Set up the params for the new HMM
       vFr = {pfr1, pfr2};  
       vTr = {ptr1, ptr2};
