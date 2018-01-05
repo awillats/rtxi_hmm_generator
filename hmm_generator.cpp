@@ -187,7 +187,7 @@ HmmGenerator::initParameters(void)
     vTr = {ptr1, ptr2};
 
     buffi = 0;
-    bufflen = 5500;
+    bufflen = 3000;
     
     getSkip=1;
     
@@ -260,6 +260,29 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
   }
 }
 
+
+void HmmGenerator::printStuff(void)
+{
+spike_buff[buffi]=99;//hopefully trigger hmm_decoder to print also
+spike_buff[buffi+1]=99;
+spike_buff[buffi+2]=99;
+spike_buff[buffi+3]=99;
+printf("\n\n generator;spike_buff=[");
+  for (int i=0; i<bufflen; i++)
+  {
+       printf("%d,",spike_buff[i]);
+  }
+	
+printf("];\nstate_guess=[");
+  for (int i=0; i<bufflen; i++)
+  {
+       printf("%d,",state_guess_buff[i]);
+  }
+printf("];endgen;");
+}
+
+
+
 void
 HmmGenerator::customizeGUI(void)
 {
@@ -284,9 +307,11 @@ HmmGenerator::customizeGUI(void)
 void
 HmmGenerator::aBttn_event(void)
 {
+	printStuff();
 }
 
 void
 HmmGenerator::bBttn_event(void)
 {
+	printf("..");
 }

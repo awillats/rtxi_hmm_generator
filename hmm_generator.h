@@ -85,6 +85,7 @@ private:
   void decodeSpkBuffer();
   int* decodeHMM(HMMv);
   void restartHMM();
+void printStuff();
 
 private slots:
   // these are custom functions that can also be connected to events
