@@ -1,5 +1,8 @@
 PLUGIN_NAME = hmm_generator
 
+#gflag is to enable better debugging
+CFLAGS = -g -Wall -Wextra
+
 HEADERS = hmm_generator.h\
           include/BabyClass.h\
           include/hmmFuns.hpp\

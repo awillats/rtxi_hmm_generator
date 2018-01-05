@@ -113,6 +113,8 @@ HmmGenerator::~HmmGenerator(void)
 void
 HmmGenerator::stepHMM(void)
 {
+  
+
   buffi++;
   if (buffi>=bufflen)
   {
@@ -150,6 +152,8 @@ void HmmGenerator::decodeSpkBuffer()
     //NB: no idea why this temporary vector is necessary. should be able to replace this with one line...
     std::vector<int> temp_vec(guessed,guessed+bufflen);
     state_guess_buff = temp_vec;
+
+    delete[] guessed;
 }
 
 void HmmGenerator::restartHMM()
@@ -162,7 +166,8 @@ void HmmGenerator::restartHMM()
     
     std::vector<double>PI(2,.5);
     guess_hmm = HMMv(2,2,vFr,vTr,PI);
-    decodeSpkBuffer();
+//removing this to test whether it's necessary for the memory leak!   
+   decodeSpkBuffer();
     //printf("HMM restarted\n");
 }
 
