@@ -20,8 +20,18 @@
  * This is a template header file for a user modules derived from
  * DefaultGUIModel with a custom GUI.
  */
-
+//#include "Time.h"
+#include "include/BabyClass.h"
 #include <default_gui_model.h>
+#include <vector>
+#include <iterator>
+#include <tuple>
+
+
+#include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
+
+#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp"
+
 
 class HmmGenerator : public DefaultGUIModel
 {
@@ -36,15 +46,46 @@ public:
   void createGUI(DefaultGUIModel::variable_t*, int);
   void customizeGUI(void);
 
+
 protected:
   virtual void update(DefaultGUIModel::update_flags_t);
 
 private:
-  double some_parameter;
-  double some_state;
+
+  //should these be extern statements?
+
+  int getSkip;
   double period;
+  double period_ms;
+  double spike;
+  int gstate;
+
+  int bufflen;
+  int buffi;
+//s  double rep_count;
+  std::vector<int> spike_buff;
+  std::vector<int> state_buff;
+  std::vector<int> state_guess_buff;
+
+//--- HMM guess params
+  double pfr1;
+  double pfr2;
+  double ptr1;
+  double ptr2;
+  
+  std::vector<double> vFr;
+  std::vector<double> vTr;
+
+  //HMM guess_hmm;
+  HMMv guess_hmm = HMMv();
+  //NB: this method declaration needs to go somewhere else!!
 
   void initParameters();
+  void stepHMM();
+  void decodeSpkBuffer();
+  int* decodeHMM(HMMv);
+  void restartHMM();
+void printStuff();
 
 private slots:
   // these are custom functions that can also be connected to events

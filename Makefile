@@ -1,9 +1,26 @@
 PLUGIN_NAME = hmm_generator
 
-HEADERS = hmm_generator.h
+#gflag is to enable better debugging
+CFLAGS = -g -Wall -Wextra
+
+HEADERS = hmm_generator.h\
+          include/BabyClass.h\
+          include/hmmFuns.hpp\
+          ../../../module_help/StAC_rtxi/hmmFuns.hpp\
+          ../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp\
+          ../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.hpp
+
+
 
 SOURCES = hmm_generator.cpp\
           moc_hmm_generator.cpp\
+          include/BabyClass.cpp\
+          ../../../module_help/StAC_rtxi/hmmFuns.cpp\
+          ../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.cpp\
+          ../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.cpp\
+#          include/hmmFuns.cpp\
+
+
 
 LIBS = 
 
