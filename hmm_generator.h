@@ -60,6 +60,9 @@ private:
   double period_ms;
   double spike;
   int gstate;
+  
+  int nstates;
+  int nevents;
 
   int bufflen;
   int buffi;
@@ -71,16 +74,23 @@ private:
 //--- HMM guess params
   double pfr1;
   double pfr2;
+  
+  double pfr3;
+  double pfr4; //turns these into a vector double
+  
   double ptr1;
   double ptr2;
 
+    std::vector<std::vector<double>> trs;
+    std::vector<std::vector<double>> frs;
   std::vector<double> vFr;
   std::vector<double> vTr;
 
   //HMM guess_hmm;
-  HMMv guess_hmm = HMMv();
+  HMMv guess_hmm = HMMv(); //this is also the true HMM for the generator...
   //NB: this method declaration needs to go somewhere else!!
 
+  void buildBigHMM();
   void initParameters();
   void stepHMM();
   void decodeSpkBuffer();

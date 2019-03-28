@@ -25,6 +25,8 @@
 
 
 
+//going to hardcode this with 4 emissions
+
 /*
 to do list:
 * remove excess states/params
@@ -158,7 +160,8 @@ void HmmGenerator::decodeSpkBuffer()
 void HmmGenerator::restartHMM()
 {
     std::vector<double>PI(2,.5);
-    guess_hmm = HMMv(2,2,vTr,vFr,PI);
+//    guess_hmm = HMMv(2,4,vTr,vFr,PI);
+    guess_hmm = HMMv(nstates,nevents,trs,frs,PI);
     //for new method it's Tr then Fr //    guess_hmm = HMMv(2,2,vFr,vTr,PI);
 
     guess_hmm.genSeq(bufflen);//new, probably extraneous
@@ -170,20 +173,39 @@ void HmmGenerator::restartHMM()
     //printf("HMM restarted\n");
 }
 
+void HmmGenerator::buildBigHMM()
+{
+    double pfr1_ = (1.0-pfr1)/(nevents-1);
+    double pfr2_ = (1.0-pfr2)/(nevents-1);
+    double ptr1_ = (1.0-ptr1)/(nstates-1);
+    double ptr2_ = (1.0-ptr2)/(nstates-1);
+    //trs = {{ptr1, ptr1_,ptr1_},{ptr1_,ptr1,ptr1_},{ptr1_,ptr1_,ptr1}};
+    //frs = {{pfr1,pfr1_,pfr1_}, {pfr2,pfr2_,pfr2_}, {pfr1_,pfr1,pfr1_}};
+    
+    trs = {{ptr1_, ptr1},{ptr1,ptr1_}};
+    frs = {{20,1,1}, {1,1,20}};
+    
+}
 
 void
 HmmGenerator::initParameters(void)
 {
+    nstates=2;
+    nevents=3;
     spike=0;
     gstate=0;
 
     pfr1=1e-3;
     pfr2=20e-3;
+   
+    
     ptr1=4e-4;
     ptr2=4e-4;
+    buildBigHMM();
 
-    vFr = {pfr1, pfr2};
-    vTr = {ptr1, ptr2};
+
+    //vFr = {pfr1, pfr2};
+    //vTr = {ptr1, ptr2};
 
     buffi = 0;
     bufflen = 3000;
@@ -205,7 +227,7 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
       printf("Init called\n");
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       period_ms = period*1e-3;
-      setParameter("Debug label", 10.3);
+      setParameter("Debug label", 10.5);
       setParameter("FR 1", pfr1/period_ms);
       setParameter("FR 2", pfr2/period_ms);
       setParameter("TR 1", ptr1/period_ms);
@@ -238,6 +260,8 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
         //Set up the params for the new HMM
       vFr = {pfr1, pfr2};
       vTr = {ptr1, ptr2};
+      
+      buildBigHMM();
       restartHMM();
 
       break;
