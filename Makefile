@@ -4,21 +4,21 @@ PLUGIN_NAME = hmm_generator
 CFLAGS = -g -Wall -Wextra
 
 HEADERS = hmm_generator.h\
-          include/BabyClass.h\
           include/hmmFuns.hpp\
           ../../../module_help/StAC_rtxi/hmmFuns.hpp\
           ../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp\
           ../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.hpp
-
+#          include/BabyClass.h\
 
 
 SOURCES = hmm_generator.cpp\
           moc_hmm_generator.cpp\
-          include/BabyClass.cpp\
           ../../../module_help/StAC_rtxi/hmmFuns.cpp\
           ../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.cpp\
           ../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.cpp\
 #          include/hmmFuns.cpp\
+#          include/BabyClass.cpp\
+
 
 
 

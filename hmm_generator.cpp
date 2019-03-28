@@ -26,13 +26,17 @@
 
 
 /*
-to do list: 
+to do list:
 * remove excess states/params
-* 
-* 
+* remove getSkip machiner
+* redirect inlcudes to new compu code
 
 
 */
+
+
+
+
 
 
 
@@ -98,7 +102,7 @@ HmmGenerator::HmmGenerator(void)
                 // into the constructor
     refresh();    // this is required to update the GUI with parameter and state
                 // values
-    
+
     printf("\n");
     //update(INIT);
     //refresh();
@@ -113,8 +117,6 @@ HmmGenerator::~HmmGenerator(void)
 void
 HmmGenerator::stepHMM(void)
 {
-  
-
   buffi++;
   if (buffi>=bufflen)
   {
@@ -126,7 +128,7 @@ HmmGenerator::stepHMM(void)
 
    spike = spike_buff[buffi];
    int tstate= state_buff[buffi];
-   gstate= state_guess_buff[buffi];
+   gstate= state_guess_buff[buffi]; //seems weird... only updating the guess when the buffer resets
 
    output(0)=spike;
    output(1)=tstate;
@@ -144,7 +146,7 @@ HmmGenerator::execute(void)
 int* HmmGenerator::decodeHMM(HMMv guess_hmm_)
 {
   int* guessed = viterbi(guess_hmm_, spike_buff, bufflen);
-  return guessed;  
+  return guessed;
 }
 void HmmGenerator::decodeSpkBuffer()
 {
@@ -162,11 +164,12 @@ void HmmGenerator::restartHMM()
     HMM_Data HD = genHMM_Data(vFr,vTr,bufflen);
     spike_buff = HD.spikes;
     state_buff = HD.states;
-    
-    
+
+
     std::vector<double>PI(2,.5);
     guess_hmm = HMMv(2,2,vFr,vTr,PI);
-//removing this to test whether it's necessary for the memory leak!   
+
+//removing this to test whether it's necessary for the memory leak!
    decodeSpkBuffer();
     //printf("HMM restarted\n");
 }
@@ -188,9 +191,9 @@ HmmGenerator::initParameters(void)
 
     buffi = 0;
     bufflen = 3000;
-    
+
     getSkip=1;
-    
+
     restartHMM();
     stepHMM();
 }
@@ -200,13 +203,13 @@ void
 HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
 {
   double foo;
-  
+
   switch (flag) {
     case INIT:
       printf("Init called\n");
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       period_ms = period*1e-3;
-      setParameter("GUI label", 10.1);
+      setParameter("GUI label", 10.2);
       //setState("A State", some_state);
       setParameter("FR 1", pfr1/period_ms);
       setParameter("FR 2", pfr2/period_ms);
@@ -216,7 +219,7 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
 
     case MODIFY:
       printf("Modify called\n");
-      
+
       buffi=0;
 
         //this skip business is probably unnecessary, but for some reason this seems to reset values to zero and prevent the INIT clause from taking effect
@@ -233,15 +236,15 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
       {
         getSkip=0;
         printf("\n**Mod skip\n");
-      } 
+      }
       printf("F:%.3f, %.3f, T:%.3f, %.3f\n",pfr1,pfr2,ptr1,ptr2);
-      
-      
+
+
         //Set up the params for the new HMM
-      vFr = {pfr1, pfr2};  
+      vFr = {pfr1, pfr2};
       vTr = {ptr1, ptr2};
       restartHMM();
-      
+
       break;
 
     case UNPAUSE:
@@ -272,7 +275,7 @@ printf("\n\n generator;spike_buff=[");
   {
        printf("%d,",spike_buff[i]);
   }
-	
+
 printf("];\nstate_guess=[");
   for (int i=0; i<bufflen; i++)
   {
