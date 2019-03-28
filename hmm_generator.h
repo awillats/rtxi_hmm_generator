@@ -22,17 +22,12 @@
  */
 //#include "Time.h"
 
-#include "include/BabyClass.h" // todo deleteme
+//#include "include/BabyClass.h" // todo deleteme
 #include <default_gui_model.h>
 #include <vector>
-#include <iterator>
+#include <iterator> //
 #include <tuple>
 
-// todo: redirect these includes to new hmmfuns!
-// they live in?
-#include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
-#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp"
-//#include "../../../module_help/
 #include "../../../module_help/hmmX/hmm/printFuns.hpp"
 #include "../../../module_help/hmmX/hmm/shuttleFuns.hpp"
 #include "../../../module_help/hmmX/hmm/hmm_vec.hpp"
@@ -96,7 +91,5 @@ void printStuff();
 private slots:
   // these are custom functions that can also be connected to events
   // through the Qt API. they must be implemented in plugin_template.cpp
-
   void aBttn_event(void);
-  void bBttn_event(void);
 };

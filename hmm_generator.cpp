@@ -53,7 +53,7 @@ createRTXIPlugin(void)
 
 static DefaultGUIModel::variable_t vars[] = {
   {
-    "GUI label", "Tooltip description",
+    "Debug label", "Tooltip description",
     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
   },
   {
@@ -71,9 +71,6 @@ static DefaultGUIModel::variable_t vars[] = {
   {
     "TR 2", "Transition rate",
     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-  },
-  {
-    "A State", "delete me", DefaultGUIModel::STATE,
   },
   {
     "Spike", "ooze", DefaultGUIModel::OUTPUT,
@@ -160,14 +157,13 @@ void HmmGenerator::decodeSpkBuffer()
 
 void HmmGenerator::restartHMM()
 {
-    //spike_buff = genHMM(vFr,vTr,bufflen);
-    HMM_Data HD = genHMM_Data(vFr,vTr,bufflen);
-    spike_buff = HD.spikes;
-    state_buff = HD.states;
-
-
     std::vector<double>PI(2,.5);
-    guess_hmm = HMMv(2,2,vFr,vTr,PI);
+    guess_hmm = HMMv(2,2,vTr,vFr,PI);
+    //for new method it's Tr then Fr //    guess_hmm = HMMv(2,2,vFr,vTr,PI);
+
+    guess_hmm.genSeq(bufflen);//new, probably extraneous
+    spike_buff = guess_hmm.spikes;
+    state_buff = guess_hmm.states;
 
 //removing this to test whether it's necessary for the memory leak!
    decodeSpkBuffer();
@@ -209,8 +205,7 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
       printf("Init called\n");
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       period_ms = period*1e-3;
-      setParameter("GUI label", 10.2);
-      //setState("A State", some_state);
+      setParameter("Debug label", 10.3);
       setParameter("FR 1", pfr1/period_ms);
       setParameter("FR 2", pfr2/period_ms);
       setParameter("TR 1", ptr1/period_ms);
@@ -293,14 +288,11 @@ HmmGenerator::customizeGUI(void)
 
   QGroupBox* button_group = new QGroupBox;
 
-  QPushButton* abutton = new QPushButton("Button A");
-  QPushButton* bbutton = new QPushButton("Button B");
+  QPushButton* abutton = new QPushButton("Print params");
   QHBoxLayout* button_layout = new QHBoxLayout;
   button_group->setLayout(button_layout);
   button_layout->addWidget(abutton);
-  button_layout->addWidget(bbutton);
   QObject::connect(abutton, SIGNAL(clicked()), this, SLOT(aBttn_event()));
-  QObject::connect(bbutton, SIGNAL(clicked()), this, SLOT(bBttn_event()));
 
   customlayout->addWidget(button_group, 0, 0);
   setLayout(customlayout);
@@ -311,10 +303,4 @@ void
 HmmGenerator::aBttn_event(void)
 {
 	printStuff();
-}
-
-void
-HmmGenerator::bBttn_event(void)
-{
-	printf("..");
 }
