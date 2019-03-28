@@ -168,9 +168,11 @@ void HmmGenerator::restartHMM()
 
     std::vector<double>PI(2,.5);
     guess_hmm = HMMv(2,2,vFr,vTr,PI);
-    guess_hmm.genSeq(bufflen);//new, probably extraneous
-    spike_buff = guess_hmm.spikes;
-    state_buff = guess_hmm.states;
+
+  //  guess_hmm.genSeq(bufflen);//new, probably extraneous
+    std::std::vector<int> Zvec(bufflen,0);
+    spike_buff = Zvec; //guess_hmm.spikes;
+    state_buff = Zvec; //guess_hmm.states;
 
 //removing this to test whether it's necessary for the memory leak!
    decodeSpkBuffer();
