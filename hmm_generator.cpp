@@ -53,7 +53,7 @@ createRTXIPlugin(void)
 
 static DefaultGUIModel::variable_t vars[] = {
   {
-    "GUI label", "Tooltip description",
+    "Debug label", "Tooltip description",
     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
   },
   {
@@ -71,9 +71,6 @@ static DefaultGUIModel::variable_t vars[] = {
   {
     "TR 2", "Transition rate",
     DefaultGUIModel::PARAMETER | DefaultGUIModel::DOUBLE,
-  },
-  {
-    "A State", "delete me", DefaultGUIModel::STATE,
   },
   {
     "Spike", "ooze", DefaultGUIModel::OUTPUT,
@@ -209,8 +206,7 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
       printf("Init called\n");
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       period_ms = period*1e-3;
-      setParameter("GUI label", 10.2);
-      //setState("A State", some_state);
+      setParameter("Debug label", 10.2);
       setParameter("FR 1", pfr1/period_ms);
       setParameter("FR 2", pfr2/period_ms);
       setParameter("TR 1", ptr1/period_ms);
@@ -293,14 +289,11 @@ HmmGenerator::customizeGUI(void)
 
   QGroupBox* button_group = new QGroupBox;
 
-  QPushButton* abutton = new QPushButton("Button A");
-  QPushButton* bbutton = new QPushButton("Button B");
+  QPushButton* abutton = new QPushButton("Print params");
   QHBoxLayout* button_layout = new QHBoxLayout;
   button_group->setLayout(button_layout);
   button_layout->addWidget(abutton);
-  button_layout->addWidget(bbutton);
   QObject::connect(abutton, SIGNAL(clicked()), this, SLOT(aBttn_event()));
-  QObject::connect(bbutton, SIGNAL(clicked()), this, SLOT(bBttn_event()));
 
   customlayout->addWidget(button_group, 0, 0);
   setLayout(customlayout);
@@ -311,10 +304,4 @@ void
 HmmGenerator::aBttn_event(void)
 {
 	printStuff();
-}
-
-void
-HmmGenerator::bBttn_event(void)
-{
-	printf("..");
 }
