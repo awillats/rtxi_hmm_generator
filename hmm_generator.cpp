@@ -158,13 +158,19 @@ void HmmGenerator::decodeSpkBuffer()
 void HmmGenerator::restartHMM()
 {
     //spike_buff = genHMM(vFr,vTr,bufflen);
+
+/*
+    //fake guess data?
     HMM_Data HD = genHMM_Data(vFr,vTr,bufflen);
     spike_buff = HD.spikes;
     state_buff = HD.states;
-
+*/
 
     std::vector<double>PI(2,.5);
     guess_hmm = HMMv(2,2,vFr,vTr,PI);
+    guess_hmm.genSeq(bufflen);//new, probably extraneous
+    spike_buff = guess_hmm.spikes;
+    state_buff = guess_hmm.states;
 
 //removing this to test whether it's necessary for the memory leak!
    decodeSpkBuffer();
