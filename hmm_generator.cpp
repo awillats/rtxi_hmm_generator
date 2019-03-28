@@ -170,9 +170,8 @@ void HmmGenerator::restartHMM()
     guess_hmm = HMMv(2,2,vTr,vFr,PI);
     //for new method it's Tr then Fr //    guess_hmm = HMMv(2,2,vFr,vTr,PI);
 
-    spike_buff = guess_hmm.genSeq(bufflen);//new, probably extraneous
-    
-    // = guess_hmm.spikes;
+    guess_hmm.genSeq(bufflen);//new, probably extraneous
+    spike_buff = guess_hmm.spikes;
     state_buff = guess_hmm.states;
 
 //removing this to test whether it's necessary for the memory leak!
@@ -215,7 +214,7 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
       printf("Init called\n");
       period = RT::System::getInstance()->getPeriod() * 1e-6; // ms
       period_ms = period*1e-3;
-      setParameter("Debug label", 10.2);
+      setParameter("Debug label", 10.3);
       setParameter("FR 1", pfr1/period_ms);
       setParameter("FR 2", pfr2/period_ms);
       setParameter("TR 1", ptr1/period_ms);
