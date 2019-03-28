@@ -31,7 +31,7 @@
 // todo: redirect these includes to new hmmfuns!
 // they live in?
 #include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
-#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp"
+//#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp"
 //#include "../../../module_help/
 #include "../../../module_help/hmmX/hmm/printFuns.hpp"
 #include "../../../module_help/hmmX/hmm/shuttleFuns.hpp"
