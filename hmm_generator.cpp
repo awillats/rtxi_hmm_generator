@@ -157,15 +157,6 @@ void HmmGenerator::decodeSpkBuffer()
 
 void HmmGenerator::restartHMM()
 {
-    //spike_buff = genHMM(vFr,vTr,bufflen);
-
-
-    //fake guess data?
-    //HMM_Data HD = genHMM_Data(vFr,vTr,bufflen); //from original include/hmmFuns
-    //spike_buff = HD.spikes;
-    //state_buff = HD.states;
-
-
     std::vector<double>PI(2,.5);
     guess_hmm = HMMv(2,2,vTr,vFr,PI);
     //for new method it's Tr then Fr //    guess_hmm = HMMv(2,2,vFr,vTr,PI);

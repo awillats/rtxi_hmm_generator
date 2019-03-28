@@ -32,7 +32,6 @@
 // they live in?
 //#include "../../../module_help/StAC_rtxi/hmmFuns.hpp"
 //#include "../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp" //this breaks the decoder for some reason
-
 //#include "../../../module_help/
 
 #include "../../../module_help/hmmX/hmm/printFuns.hpp"
