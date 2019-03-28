@@ -170,7 +170,7 @@ void HmmGenerator::restartHMM()
     guess_hmm = HMMv(2,2,vFr,vTr,PI);
 
   //  guess_hmm.genSeq(bufflen);//new, probably extraneous
-    std::std::vector<int> Zvec(bufflen,0);
+    std::vector<int> Zvec(bufflen,0);
     spike_buff = Zvec; //guess_hmm.spikes;
     state_buff = Zvec; //guess_hmm.states;
 
