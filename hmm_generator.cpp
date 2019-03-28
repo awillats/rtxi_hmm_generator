@@ -175,30 +175,33 @@ void HmmGenerator::restartHMM()
 
 void HmmGenerator::buildBigHMM()
 {
+    
+    
+    double ptr1_ = (1.0-(ptr1*(nstates-1)));
+    double ptr2_ = (1.0-(ptr2*(nstates-1)));
+    
     double pfr1_ = (1.0-pfr1)/(nevents-1);
     double pfr2_ = (1.0-pfr2)/(nevents-1);
-    double ptr1_ = (1.0-ptr1)/(nstates-1);
-    double ptr2_ = (1.0-ptr2)/(nstates-1);
-    //trs = {{ptr1, ptr1_,ptr1_},{ptr1_,ptr1,ptr1_},{ptr1_,ptr1_,ptr1}};
-    //frs = {{pfr1,pfr1_,pfr1_}, {pfr2,pfr2_,pfr2_}, {pfr1_,pfr1,pfr1_}};
     
-    trs = {{ptr1_, ptr1},{ptr1,ptr1_}};
-    frs = {{20,1,1}, {1,1,20}};
+    trs = {{ptr1_, ptr1,ptr1}, {ptr1,ptr1_,ptr1}, {ptr1,ptr1,ptr1_}};
+    frs = {{pfr1,pfr1_,pfr1_}, {pfr2_,pfr2,pfr2_}, {pfr1_,pfr1_,pfr1}};
+    //   =  {             .9  }
+   // trs = {{ptr1_, ptr1},{ptr1,ptr1_}};
+    //frs = {{20,1,1}, {1,1,20}};
     
 }
 
 void
 HmmGenerator::initParameters(void)
 {
-    nstates=2;
+    nstates=3;
     nevents=3;
     spike=0;
     gstate=0;
 
-    pfr1=1e-3;
-    pfr2=20e-3;
+    pfr1=1-1e-2;//1e-3;
+    pfr2=.7;//20e-3
    
-    
     ptr1=4e-4;
     ptr2=4e-4;
     buildBigHMM();
