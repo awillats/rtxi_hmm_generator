@@ -159,8 +159,9 @@ void HmmGenerator::decodeSpkBuffer()
 
 void HmmGenerator::restartHMM()
 {
-    std::vector<double>PI(2,.5);
+    std::vector<double>PI(nstates,.5);
 //    guess_hmm = HMMv(2,4,vTr,vFr,PI);
+    //buildBigHMM();
     guess_hmm = HMMv(nstates,nevents,trs,frs,PI);
     //for new method it's Tr then Fr //    guess_hmm = HMMv(2,2,vFr,vTr,PI);
 
@@ -175,8 +176,6 @@ void HmmGenerator::restartHMM()
 
 void HmmGenerator::buildBigHMM()
 {
-    
-    
     double ptr1_ = (1.0-(ptr1*(nstates-1)));
     double ptr2_ = (1.0-(ptr2*(nstates-1)));
     
@@ -204,7 +203,6 @@ HmmGenerator::initParameters(void)
    
     ptr1=4e-4;
     ptr2=4e-4;
-    buildBigHMM();
 
 
     //vFr = {pfr1, pfr2};
@@ -215,6 +213,7 @@ HmmGenerator::initParameters(void)
 
     getSkip=1;
 
+    buildBigHMM();
     restartHMM();
     stepHMM();
 }
@@ -263,8 +262,8 @@ HmmGenerator::update(DefaultGUIModel::update_flags_t flag)
         //Set up the params for the new HMM
       vFr = {pfr1, pfr2};
       vTr = {ptr1, ptr2};
-      
-      buildBigHMM();
+      //NOTE, we're preventing this from updating in a weird way
+      //buildBigHMM();
       restartHMM();
 
       break;
