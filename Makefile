@@ -1,35 +1,25 @@
 PLUGIN_NAME = hmm_generator
 
+HMM_DIR = /home/stanleyrtxi/CodeRepository/hmm
+
 #gflag is to enable better debugging
 CFLAGS = -g -Wall -Wextra
 
 HEADERS = hmm_generator.h\
-          ../../../module_help/hmmX/hmm/printFuns.hpp\
-          ../../../module_help/hmmX/hmm/shuttleFuns.hpp\
-          ../../../module_help/hmmX/hmm/hmm_vec.hpp
-          
-           #         include/hmmFuns.hpp\
-           #         ../../../module_help/StAC_rtxi/hmmFuns.hpp\
-           #         ../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.hpp\
-          #../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.hpp\
-#          include/BabyClass.h\
+          $(HMM_DIR)/printFuns.hpp\
+          $(HMM_DIR)/shuttleFuns.hpp\
+          $(HMM_DIR)/hmm_vec.hpp
 
 
 SOURCES = hmm_generator.cpp\
           moc_hmm_generator.cpp\
-          ../../../module_help/hmmX/hmm/printFuns.cpp\
-          ../../../module_help/hmmX/hmm/shuttleFuns.cpp\
-          ../../../module_help/hmmX/hmm/hmm_vec.cpp
-#          ../../../module_help/StAC_rtxi/hmmFuns.cpp\
-#          ../../../module_help/StAC_rtxi/hmm_tests/hmm_vec.cpp\
-#          ../../../module_help/StAC_rtxi/hmm_tests/hmm_fs.cpp\
-#          include/hmmFuns.cpp\
-#          include/BabyClass.cpp\
+          $(HMM_DIR)/printFuns.cpp\
+          $(HMM_DIR)/shuttleFuns.cpp\
+          $(HMM_DIR)/hmm_vec.cpp
 
+LIBS =
 
-
-
-LIBS = 
+CXXFLAGS := $(CXXFLAGS) -I$(HMM_DIR)
 
 ### Do not edit below this line ###
 

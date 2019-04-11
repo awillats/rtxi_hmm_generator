@@ -28,10 +28,9 @@
 #include <iterator> //
 #include <tuple>
 
-#include "../../../module_help/hmmX/hmm/printFuns.hpp"
-#include "../../../module_help/hmmX/hmm/shuttleFuns.hpp"
-#include "../../../module_help/hmmX/hmm/hmm_vec.hpp"
-
+#include <printFuns.hpp>
+#include <shuttleFuns.hpp>
+#include <hmm_vec.hpp>
 
 
 class HmmGenerator : public DefaultGUIModel

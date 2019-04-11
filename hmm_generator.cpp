@@ -36,10 +36,6 @@ to do list:
 
 
 
-
-
-
-
 #include "hmm_generator.h"
 #include <iostream>
 #include <main_window.h>
