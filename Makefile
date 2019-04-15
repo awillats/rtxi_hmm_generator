@@ -1,9 +1,12 @@
 PLUGIN_NAME = hmm_generator
 
-HMM_DIR = /home/stanleyrtxi/CodeRepository/hmm
+HMM_DIR = /home/RTXI/module_help/hmmX/hmm
+#HMM_DIRZ = /home/adam/RTXI/module_help/hmmX/hmm
+
 
 #gflag is to enable better debugging
-CFLAGS = -g -Wall -Wextra
+CFLAGS = -g -Wall -Wextra 
+#-I/home/adam/RTXI/module_help/hmmX/hmm
 
 HEADERS = hmm_generator.h\
           $(HMM_DIR)/printFuns.hpp\
@@ -19,7 +22,8 @@ SOURCES = hmm_generator.cpp\
 
 LIBS =
 
-CXXFLAGS := $(CXXFLAGS) -I$(HMM_DIR)
+#CXXFLAGS := $(CXXFLAGS) -I$(HMM_DIR)
+CXXFLAGS += -I$(HMM_DIR)
 
 ### Do not edit below this line ###
 
