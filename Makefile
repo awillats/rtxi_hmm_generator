@@ -1,6 +1,6 @@
 PLUGIN_NAME = hmm_generator
 
-HMM_DIR = /home/RTXI/module_help/hmmX/hmm
+HMM_DIR=/home/adam/RTXI/module_help/hmmX/hmm
 #HMM_DIRZ = /home/adam/RTXI/module_help/hmmX/hmm
 
 
