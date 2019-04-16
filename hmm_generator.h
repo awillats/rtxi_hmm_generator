@@ -28,10 +28,7 @@
 #include <iterator> //
 #include <tuple>
 
-//#include "/home/adam/RTXI/module_help/hmmX/hmm/printFuns.hpp"
-//#include "/home/adam/RTXI/module_help/hmmX/hmm/shuttleFuns.hpp"
-//#include "/home/adam/RTXI/module_help/hmmX/hmm/hmm_vec.hpp"
-
+//these live in module_help
 #include <printFuns.hpp>
 #include <shuttleFuns.hpp>
 #include <hmm_vec.hpp>
