@@ -124,8 +124,8 @@ HmmGenerator::stepHMM(void)
    gstate= state_guess_buff[buffi]; //seems weird... only updating the guess when the buffer resets
 
    output(0)=spike;
-   output(1)=tstate;
-   output(2)=gstate;
+   output(1)=tstate-1; //starting at 0 convetion
+   output(2)=gstate-1;//starting at 0 convention
 }
 
 void
